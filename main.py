@@ -82,7 +82,7 @@ class AliDDNS(object):
             try:
                 self.__v6 = requests.get(self.v6api).text
             except Exception as e: 
-                print("Failed to get local public ipv4 address,", e)
+                print("Failed to get local public ipv6 address,", e)
             else:
                 print("Your ipv6 address is:", self.__v6)
 
