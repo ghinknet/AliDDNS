@@ -50,31 +50,34 @@ class AliDDNS(object):
             else:
                 print("Your ipv4 address is:", self.__v4)
 
-                describe_v4 = DescribeDomainRecordsRequest()
-                describe_v4.set_accept_format('json')
+                try:
+                    describe_v4 = DescribeDomainRecordsRequest()
+                    describe_v4.set_accept_format('json')
 
-                describe_v4.set_DomainName(self.domain)
-                describe_v4.set_RRKeyWord(self.record)
-                describe_v4.set_TypeKeyWord("A")
+                    describe_v4.set_DomainName(self.domain)
+                    describe_v4.set_RRKeyWord(self.record)
+                    describe_v4.set_TypeKeyWord("A")
 
-                describeback_v4 = self.__client.do_action_with_exception(describe_v4)
+                    describeback_v4 = self.__client.do_action_with_exception(describe_v4)
 
-                recordlist_v4 = json.loads(describeback_v4)
-                recordid_v4 = recordlist_v4['DomainRecords']['Record'][0]['RecordId']
-                value_v4 = recordlist_v4['DomainRecords']['Record'][0]['Value']
+                    recordlist_v4 = json.loads(describeback_v4)
+                    recordid_v4 = recordlist_v4['DomainRecords']['Record'][0]['RecordId']
+                    value_v4 = recordlist_v4['DomainRecords']['Record'][0]['Value']
 
-                if value_v4 != self.__v4:
-                    print('Your ipv4 address has been changed, update now.')
-                    update_v4 = UpdateDomainRecordRequest()
-                    update_v4.set_accept_format('json')
+                    if value_v4 != self.__v4:
+                        print('Your ipv4 address has been changed, update now.')
+                        update_v4 = UpdateDomainRecordRequest()
+                        update_v4.set_accept_format('json')
 
-                    update_v4.set_RecordId(recordid_v4)
-                    update_v4.set_Value(self.__v4)
-                    update_v4.set_Type("A")
-                    update_v4.set_RR(self.record)
+                        update_v4.set_RecordId(recordid_v4)
+                        update_v4.set_Value(self.__v4)
+                        update_v4.set_Type("A")
+                        update_v4.set_RR(self.record)
 
-                    self.__client.do_action_with_exception(update_v4)
-                    print('Your ipv4 record has been updated successfully.')
+                        self.__client.do_action_with_exception(update_v4)
+                        print('Your ipv4 record has been updated successfully.')
+                except Exception as e: 
+                    print("Failed to update your ipv4 record,", e)
 
         
         # Get local public ipv6 address
@@ -86,31 +89,34 @@ class AliDDNS(object):
             else:
                 print("Your ipv6 address is:", self.__v6)
 
-                describe_v6 = DescribeDomainRecordsRequest()
-                describe_v6.set_accept_format('json')
+                try:
+                    describe_v6 = DescribeDomainRecordsRequest()
+                    describe_v6.set_accept_format('json')
 
-                describe_v6.set_DomainName(self.domain)
-                describe_v6.set_RRKeyWord(self.record)
-                describe_v6.set_TypeKeyWord("AAAA")
+                    describe_v6.set_DomainName(self.domain)
+                    describe_v6.set_RRKeyWord(self.record)
+                    describe_v6.set_TypeKeyWord("AAAA")
 
-                describeback_v6 = self.__client.do_action_with_exception(describe_v6)
+                    describeback_v6 = self.__client.do_action_with_exception(describe_v6)
 
-                recordlist_v6 = json.loads(describeback_v6)
-                recordid_v6 = recordlist_v6['DomainRecords']['Record'][0]['RecordId']
-                value_v6 = recordlist_v6['DomainRecords']['Record'][0]['Value']
+                    recordlist_v6 = json.loads(describeback_v6)
+                    recordid_v6 = recordlist_v6['DomainRecords']['Record'][0]['RecordId']
+                    value_v6 = recordlist_v6['DomainRecords']['Record'][0]['Value']
 
-                if value_v6 != self.__v6:
-                    print('Your ipv6 address has been changed, update now.')
-                    update_v6 = UpdateDomainRecordRequest()
-                    update_v6.set_accept_format('json')
+                    if value_v6 != self.__v6:
+                        print('Your ipv6 address has been changed, update now.')
+                        update_v6 = UpdateDomainRecordRequest()
+                        update_v6.set_accept_format('json')
 
-                    update_v6.set_RecordId(recordid_v6)
-                    update_v6.set_Value(self.__v6)
-                    update_v6.set_Type("AAAA")
-                    update_v6.set_RR(self.record)
+                        update_v6.set_RecordId(recordid_v6)
+                        update_v6.set_Value(self.__v6)
+                        update_v6.set_Type("AAAA")
+                        update_v6.set_RR(self.record)
 
-                    self.__client.do_action_with_exception(update_v6)
-                    print('Your ipv6 record has been updated successfully.')
+                        self.__client.do_action_with_exception(update_v6)
+                        print('Your ipv6 record has been updated successfully.')
+                except Exception as e: 
+                    print("Failed to update your ipv4 record,", e)
             
 if __name__ == "__main__":
     dns = AliDDNS("MainDomain.com", "SubDomain", "AccessKey ID", "AccessKey Secret")
