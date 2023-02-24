@@ -116,7 +116,7 @@ class AliDDNS(object):
                         self.__client.do_action_with_exception(update_v6)
                         print('Your ipv6 record has been updated successfully.')
                 except Exception as e: 
-                    print("Failed to update your ipv4 record,", e)
+                    print("Failed to update your ipv6 record,", e)
             
 if __name__ == "__main__":
     dns = AliDDNS("MainDomain.com", "SubDomain", "AccessKey ID", "AccessKey Secret")
