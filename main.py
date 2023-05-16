@@ -1,6 +1,7 @@
+import re
 import time
-import threading
 import json
+import threading
 
 import requests
 
@@ -14,8 +15,8 @@ class AliDDNS(object):
                  id, secret,
                  sleep = 600,
                  ipv4 = True, ipv6 = True,
-                 v4api = "https://ipv4.gh.ink",
-                 v6api = "https://ipv6.gh.ink"):
+                 v4api = "http://ipv4.ipv6-test.ch/ip/",
+                 v6api = "http://ipv6.ipv6-test.ch/ip"):
     
         assert domain.count(".") == 1 and \
                not domain.startswith(".") and \
@@ -28,6 +29,8 @@ class AliDDNS(object):
         self.ipv6 = ipv6
         self.v4api = v4api
         self.v6api = v6api
+        self.v4re = re.compile(r"(((\d{1,2})|(1\d{2})|(2[0-4]\d)|(25[0-5]))\.){3}((\d{1,2})|(1\d{2})|(2[0-4]\d)|(25[0-5]))")
+        self.v6re = re.compile(r"(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))")
 
         self.__client = AcsClient(id, secret, 'cn-hangzhou')
 
@@ -44,7 +47,7 @@ class AliDDNS(object):
         # Get local public ipv4 address
         if self.ipv4:
             try:
-                self.__v4 = requests.get(self.v4api).text
+                self.__v4 = re.search(self.v4re, requests.get(self.v4api).text).group(0)
             except Exception as e: 
                 print("Failed to get local public ipv4 address,", e)
             else:
@@ -83,7 +86,7 @@ class AliDDNS(object):
         # Get local public ipv6 address
         if self.ipv6:
             try:
-                self.__v6 = requests.get(self.v6api).text
+                self.__v6 = re.search(self.v6re, requests.get(self.v6api).text).group(0)
             except Exception as e: 
                 print("Failed to get local public ipv6 address,", e)
             else:
